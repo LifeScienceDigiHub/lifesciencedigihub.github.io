@@ -3,7 +3,7 @@
   "info": {
     "title": "eEcd API",
     "description": "",
-    "termsOfService": "http://www.nallian.com/",
+    "termsOfService": "https://www.nallian.com/",
     "version": "v1"
   },
   "servers": [
@@ -1177,7 +1177,7 @@
           "Cleanings"
         ],
         "summary": "Request a cleaning action.",
-        "description": "\n\r\n                    Requests a new cleaning action. This is required to view the booklet containing the equipment history.\r\n                    Only one active cleaning action is permitted per equipment.\r\n                \r\n\n\r\n  <b>Can be called by</b>\r\n  <ul>\r\n    <li>Equipment Operator</li>\r\n  </ul>\r\n\r\n\n\r\n  <b>Required roles</b>\r\n  <ul>\r\n    <li>Admin</li>\r\n    <li>Equipment Manager</li>\r\n  </ul>\r\n",
+        "description": "\n\r\n                    Requests a new cleaning action. This is required to view the booklet containing the equipment history.\r\n                    Only one active cleaning action is permitted per equipment.\r\n                \r\n\n\r\n  <b>Can be called by</b>\r\n  <ul>\r\n    <li>Equipment Operator</li>\r\n  </ul>\r\n\r\n\n\r\n  <b>Required roles</b>\r\n  <ul>\r\n    <li>Admin</li>\r\n    <li>Despatcher</li>\r\n    <li>Equipment Manager</li>\r\n  </ul>\r\n",
         "parameters": [
           {
             "name": "equipmentId",
@@ -1255,7 +1255,7 @@
           "Cleanings"
         ],
         "summary": "Update a cleaning action request.",
-        "description": "\n\r\n                    Updates a cleaning action request. This can be done to any cleaning action that has state requested.\r\n                \r\n\n\r\n  <b>Can be called by</b>\r\n  <ul>\r\n    <li>Equipment Operator</li>\r\n  </ul>\r\n\r\n\n\r\n  <b>Required roles</b>\r\n  <ul>\r\n    <li>Admin</li>\r\n    <li>Equipment Manager</li>\r\n  </ul>\r\n",
+        "description": "\n\r\n                    Updates a cleaning action request. This can be done to any cleaning action that has state requested.\r\n                \r\n\n\r\n  <b>Can be called by</b>\r\n  <ul>\r\n    <li>Equipment Operator</li>\r\n  </ul>\r\n\r\n\n\r\n  <b>Required roles</b>\r\n  <ul>\r\n    <li>Admin</li>\r\n    <li>Despatcher</li>\r\n    <li>Equipment Manager</li>\r\n  </ul>\r\n",
         "parameters": [
           {
             "name": "equipmentId",
@@ -1675,7 +1675,7 @@
           "Cleanings"
         ],
         "summary": "Search through the cleaning requests issued by an organisation.",
-        "description": "\n\r\n                    Get all cleaning requests issued by the logged in organisation. Optionally filter by equipment, date or\r\n                    cleaning location.\r\n                \r\n\n\r\n  <b>Can be called by</b>\r\n  <ul>\r\n    <li>Equipment Operator</li>\r\n  </ul>\r\n\r\n\n\r\n  <b>Required roles</b>\r\n  <ul>\r\n    <li>Admin</li>\r\n    <li>Equipment Manager</li>\r\n  </ul>\r\n",
+        "description": "\n\r\n                    Get all cleaning requests issued by the logged in organisation. Optionally filter by equipment, date or\r\n                    cleaning location.\r\n                \r\n\n\r\n  <b>Can be called by</b>\r\n  <ul>\r\n    <li>Equipment Operator</li>\r\n  </ul>\r\n\r\n\n\r\n  <b>Required roles</b>\r\n  <ul>\r\n    <li>Admin</li>\r\n    <li>Despatcher</li>\r\n    <li>Equipment Manager</li>\r\n  </ul>\r\n",
         "parameters": [
           {
             "name": "search",
@@ -14484,10 +14484,12 @@
         "properties": {
           "id": {
             "type": "string",
+            "description": "Unique identifier for the document.",
             "format": "uuid"
           },
           "originalFilename": {
             "type": "string",
+            "description": "The original file name, before we renamed it to a guid.",
             "nullable": true
           },
           "documentType": {
@@ -14527,7 +14529,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Output DTO for simplified equipmentdetails."
       },
       "BookletData.Cleaning.CleaningActionSummary": {
         "type": "object",
@@ -14554,23 +14557,27 @@
           },
           "displayStatus": {
             "type": "string",
+            "description": "Note: introduced for backwards compatibility.",
             "nullable": true,
             "readOnly": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Output DTO, for getting the summary of cleaning action."
       },
       "BookletData.Cleaning.CodeValidationResult": {
         "type": "object",
         "properties": {
           "isValid": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Did the validation pass?"
           },
           "errors": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Common.ErrorResponse"
             },
+            "description": "A list of reasons why the cleaning would not be polymer complete. Examples:\r\n- E62 is required;\r\n- Either P01 or P10 is required;",
             "nullable": true
           },
           "missingOptionalCodes": {
@@ -14578,6 +14585,7 @@
             "items": {
               "type": "string"
             },
+            "description": "A list of codes that were optional but not found. If these codes are not\r\nfound, a reason needs to be given for each individual one.",
             "nullable": true
           }
         },
@@ -14656,6 +14664,7 @@
           },
           "displayStatus": {
             "type": "string",
+            "description": "Note: introduced for backwards compatibility.",
             "nullable": true,
             "readOnly": true
           },
@@ -14713,22 +14722,26 @@
         "properties": {
           "locationId": {
             "type": "string",
+            "description": "Needs to be a valid cleaning location attached to the organisation.",
             "format": "uuid"
           },
           "type": {
             "$ref": "#/components/schemas/CleaningTypeEnum"
           },
           "isUnaccompanied": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Unaccompanied cleanings do not require a driver signature, and are signed off implicitly\r\nupon completing."
           },
           "compartments": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "Pass the compartment keys the cleaning will be for."
           },
           "cleaningId": {
             "type": "string",
+            "description": "Optionally pass the id of the cleaningrequest to plan this in",
             "format": "uuid",
             "nullable": true
           },
@@ -14736,7 +14749,8 @@
             "type": "boolean"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Input dto. Used to create a cleaning."
       },
       "BookletData.CleaningActionCreateRequest": {
         "required": [
@@ -14749,22 +14763,26 @@
         "properties": {
           "locationId": {
             "type": "string",
+            "description": "Needs to be a valid cleaning location attached to the organisation.",
             "format": "uuid"
           },
           "type": {
             "$ref": "#/components/schemas/CleaningTypeEnum"
           },
           "isUnaccompanied": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Unaccompanied cleanings do not require a driver signature, and are signed off implicitly\r\nupon completing."
           },
           "compartments": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "Pass the compartment keys the cleaning will be for."
           },
           "cleaningId": {
             "type": "string",
+            "description": "Optionally pass the id of the cleaningrequest to plan this in",
             "format": "uuid",
             "nullable": true
           },
@@ -14777,11 +14795,13 @@
           },
           "estimatedTimeOfArrival": {
             "type": "string",
+            "description": "Time the equipment will arrive at the cleaninglocation.",
             "format": "date-time",
             "nullable": true
           },
           "estimatedTimeOfPickup": {
             "type": "string",
+            "description": "Time the equipment will be picked up at the cleaninglocation.",
             "format": "date-time",
             "nullable": true
           },
@@ -14851,16 +14871,19 @@
         "properties": {
           "startedAt": {
             "type": "string",
+            "description": "Timestamp of the truck moving into the cleaning area.",
             "format": "date-time",
             "nullable": true
           },
           "endedAt": {
             "type": "string",
+            "description": "Timestamp of the truck moving out of the cleaning area.",
             "format": "date-time",
             "nullable": true
           },
           "completedAt": {
             "type": "string",
+            "description": "Timestamp of the cleaner completing the cleaning.",
             "format": "date-time",
             "nullable": true
           },
@@ -14933,6 +14956,7 @@
           },
           "displayDate": {
             "type": "string",
+            "description": "The date to sort the loads on. For completed loads, this would be the timestamp of completion.\r\nFor all other types, this is the time that the load was planned at.",
             "format": "date-time",
             "nullable": true
           },
@@ -14953,11 +14977,13 @@
           },
           "displayStatus": {
             "type": "string",
+            "description": "Note: introduced for backwards compatibility.",
             "nullable": true,
             "readOnly": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Output DTO, for loaders wanting to see the loads they might expect."
       },
       "BookletData.CleaningUpdate": {
         "required": [
@@ -14971,7 +14997,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/BookletData.CompartmentCleaning"
-            }
+            },
+            "description": "For which compartments was the cleaning executed."
           },
           "references": {
             "$ref": "#/components/schemas/BookletData.Reference"
@@ -14984,7 +15011,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Input dto. Used to update an existing cleaning."
       },
       "BookletData.CompartmentCleaning": {
         "type": "object",
@@ -15065,11 +15093,13 @@
           },
           "estimatedTimeOfArrival": {
             "type": "string",
+            "description": "Time the equipment will arrive at the cleaninglocation.",
             "format": "date-time",
             "nullable": true
           },
           "estimatedTimeOfPickup": {
             "type": "string",
+            "description": "Time the equipment will be picked up at the cleaninglocation.",
             "format": "date-time",
             "nullable": true
           },
@@ -15205,7 +15235,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Output class for information about a load which consumes an ePPL."
       },
       "BookletData.EquipmentHistory": {
         "type": "object",
@@ -15284,6 +15315,7 @@
           },
           "displayStatus": {
             "type": "string",
+            "description": "Note: introduced for backwards compatibility.",
             "nullable": true,
             "readOnly": true
           },
@@ -15305,6 +15337,7 @@
           },
           "referenceDate": {
             "type": "string",
+            "description": "The date by which the cleanings may be ordered. Requested cleanings use the EEco IssueDate as reference;\r\ncompleted cleanings use the Process.CompletedAt as reference; signedoff cleanings use the Signoff.SignedAt\r\nas reference; other states use the last updated timestamp. Always use last status date as fallback.",
             "format": "date-time",
             "readOnly": true
           }
@@ -15359,11 +15392,13 @@
           },
           "referenceDate": {
             "type": "string",
+            "description": "The date by which the eppls may be ordered. Always use last status date; for signedoff eppls the\r\nlast status date is equal to the creationdate and the cancellation of the eppl also only changes\r\nthe last status date.",
             "format": "date-time",
             "readOnly": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Output class for passing info about an ePPL to the user."
       },
       "BookletData.HistoricalLoad": {
         "type": "object",
@@ -15433,6 +15468,7 @@
           },
           "referenceDate": {
             "type": "string",
+            "description": "When returning the history, loads are ordered by this property. For completed loads, the reference\r\ndate is the date on which the load was completed; for cancelled loads, the reference date is the date\r\non which the load was cancelled; for rejected loads, the reference date is the date on which the load\r\nwas rejected; else, it is the planned load date.",
             "format": "date-time",
             "readOnly": true
           }
@@ -15505,24 +15541,28 @@
             "$ref": "#/components/schemas/Common.ErrorResponse"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "A chemical product, to be loaded into one or more compartments of a cleaned\r\npiece of equipment."
       },
       "BookletData.LoadAcceptation": {
         "type": "object",
         "properties": {
           "productId": {
             "type": "string",
+            "description": "Mandatory if and only if no product was specified while planning the load.",
             "format": "uuid",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Input DTO for accepting an assigned load by a loader."
       },
       "BookletData.LoadAcceptationForPaperEecd": {
         "type": "object",
         "properties": {
           "productId": {
             "type": "string",
+            "description": "Mandatory if and only if no product was specified while planning the load.",
             "format": "uuid",
             "nullable": true
           },
@@ -15531,25 +15571,30 @@
             "items": {
               "type": "string"
             },
+            "description": "Simple array of compartment keys.",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "Optional comment indicating the reason why no digital Eecd was available.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Input DTO for accepting an assigned load by a loader. As no digital cleaning exists, this load will\r\nsubsequently be accepted and completed."
       },
       "BookletData.LoadAssignment": {
         "type": "object",
         "properties": {
           "productId": {
             "type": "string",
+            "description": "Internal ID of the product. Optional, as it may not yet be known by the TransCo\r\nat the time of the assignment.",
             "format": "uuid",
             "nullable": true
           },
           "sellerId": {
             "type": "string",
+            "description": "Internal ID of the seller of the product. Optional, as not only the product may not yet\r\nbe known at the time of the planned load, but even the seller.",
             "format": "uuid",
             "nullable": true
           },
@@ -15564,6 +15609,7 @@
             "items": {
               "type": "string"
             },
+            "description": "The indexes of the compartments for which the load is destined.",
             "nullable": true
           },
           "extraTask": {
@@ -15573,7 +15619,8 @@
             "$ref": "#/components/schemas/BookletData.CleaningActionCreateRequest"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Used as input DTO for EquipmentController.AssignLoad."
       },
       "BookletData.LoadAssignmentExtraTaskEnum": {
         "enum": [
@@ -15591,10 +15638,12 @@
             "items": {
               "type": "string"
             },
+            "description": "Simple array of compartmentkeys.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Input DTO that specifies which compartments were loaded."
       },
       "BookletData.LoadDetail": {
         "type": "object",
@@ -15629,10 +15678,12 @@
         "properties": {
           "targetEquipmentId": {
             "type": "string",
+            "description": "The ID of the receiving equipment.",
             "format": "uuid"
           },
           "comment": {
             "type": "string",
+            "description": "Mandatory reason for the need of the migration.",
             "nullable": true
           },
           "extraTask": {
@@ -15642,7 +15693,8 @@
             "$ref": "#/components/schemas/BookletData.CleaningActionCreateRequest"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Input DTO for moving a load from one booklet (equipment) to another."
       },
       "BookletData.LoadProcessState": {
         "type": "object",
@@ -15674,6 +15726,7 @@
         "properties": {
           "customerReference": {
             "type": "string",
+            "description": "TransportReference",
             "nullable": true
           },
           "internalReference": {
@@ -15696,10 +15749,12 @@
         "properties": {
           "comment": {
             "type": "string",
+            "description": "Mandatory reason for rejecting the assigned load.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Input DTO for rejected assigned loads."
       },
       "BookletData.LoadSummary": {
         "type": "object",
@@ -15741,11 +15796,13 @@
           },
           "displayDate": {
             "type": "string",
+            "description": "The date to sort the loads on. For completed loads, this would be the timestamp of completion.\r\nFor all other types, this is the time that the load was planned at.",
             "format": "date-time",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Output DTO, for loaders wanting to see the loads they might expect."
       },
       "BookletData.LocationData": {
         "type": "object",
@@ -15793,10 +15850,12 @@
         "properties": {
           "productName": {
             "type": "string",
+            "description": "In case the product is not known on the platform, a name can be provided.",
             "nullable": true
           },
           "loadDate": {
             "type": "string",
+            "description": "The date of the planned load. Must be in the past.",
             "format": "date-time"
           },
           "compartments": {
@@ -15804,49 +15863,74 @@
             "items": {
               "type": "string"
             },
+            "description": "The list of compartment keys.",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "Adding a nonregistered load should be accompanied by a comment.",
             "nullable": true
           },
           "unNumber": {
             "type": "string",
+            "description": "An optional UnNumber indicating hazardous materials.",
+            "nullable": true
+          },
+          "casNumber": {
+            "type": "string",
+            "description": "An optional CAS number identifying the chemical substance.",
+            "nullable": true
+          },
+          "ecNumber": {
+            "type": "string",
+            "description": "An optional EC number (European Community number).",
+            "nullable": true
+          },
+          "chemicalNameIupac": {
+            "type": "string",
+            "description": "An optional IUPAC chemical name.",
             "nullable": true
           },
           "references": {
             "$ref": "#/components/schemas/BookletData.LoadReference"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The previous load on the booklet doesn't match with the actual contents"
       },
       "BookletData.NonregisteredUserLoadCompletion": {
         "type": "object",
         "properties": {
           "productName": {
             "type": "string",
+            "description": "In case the product is not known on the platform, a name can be provided.",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "Adding a nonregistered load should be accompanied by a comment.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The previous load on the booklet doesn't match with the actual contents"
       },
       "BookletData.OneTimeLoadCreate": {
         "type": "object",
         "properties": {
           "transportOrderReference": {
             "type": "string",
+            "description": "The transport order reference",
             "nullable": true
           },
           "productName": {
             "type": "string",
+            "description": "Name of the loaded product",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "Load creation can be accompanied by a comment",
             "nullable": true
           }
         },
@@ -15869,7 +15953,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Details about the planning itself"
       },
       "BookletData.PolymerCompletenessStateEnum": {
         "enum": [
@@ -15931,6 +16016,18 @@
           "unNr": {
             "type": "string",
             "nullable": true
+          },
+          "casNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "ecNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "chemicalNameIupac": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -15940,6 +16037,7 @@
         "properties": {
           "customerReference": {
             "type": "string",
+            "description": "TransportReference",
             "nullable": true
           },
           "internalReference": {
@@ -15991,29 +16089,36 @@
         "properties": {
           "id": {
             "type": "string",
+            "description": "Randomly generated Guid.",
             "format": "uuid"
           },
           "createdOn": {
             "type": "string",
+            "description": "Always use UTC for this.",
             "format": "date-time"
           },
           "createdByUser": {
             "type": "string",
+            "description": "Always use SecurityContext.UserId for this.",
             "format": "uuid"
           },
           "lastUpdatedOn": {
             "type": "string",
+            "description": "Always use UTC for this.",
             "format": "date-time"
           },
           "lastUpdatedByUser": {
             "type": "string",
+            "description": "Always use SecurityContext.UserId for this.",
             "format": "uuid"
           },
           "isDeleted": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "If an entity is about to be deleted, one can also choose to 'softdelete' this entity. It still\r\nexists in the database, but should not appear in database queries."
           },
           "version": {
             "type": "string",
+            "description": "A random Guid to prevent concurrency issues.",
             "format": "uuid",
             "nullable": true
           },
@@ -16034,49 +16139,59 @@
             "format": "date-time"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Represents a certificate for a cleaning location. Only Sellers can manage this."
       },
       "CertifiedCleaningLocation.CertifiedCleaningLocationCreateOrUpdate": {
         "type": "object",
         "properties": {
           "cleaningLocationId": {
             "type": "string",
+            "description": "Id of a cleaning location",
             "format": "uuid"
           },
           "auditReportRef": {
             "type": "string",
+            "description": "External Id of a cleaning station",
             "nullable": true
           },
           "certifiedUntilDate": {
             "type": "string",
+            "description": "Datetime where the certificate of the cleaning location expires",
             "format": "date-time"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Not including the following properties:\r\n- Every property from the base class\r\n- SellerOrganisationId - always taking the logged in users' organisation"
       },
       "CertifiedCleaningLocation.CertifiedCleaningLocationSummary": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
+            "description": "Id of certified cleaning location",
             "format": "uuid"
           },
           "cleanerId": {
             "type": "string",
+            "description": "Id of cleaning location's organisation",
             "format": "uuid",
             "nullable": true
           },
           "cleanerName": {
             "type": "string",
+            "description": "Name of the cleaning location's organisation",
             "nullable": true
           },
           "cleaningLocationId": {
             "type": "string",
+            "description": "Id of cleaning location",
             "format": "uuid",
             "nullable": true
           },
           "cleaningLocationName": {
             "type": "string",
+            "description": "Name of cleaning location",
             "nullable": true
           },
           "addressLines": {
@@ -16084,28 +16199,34 @@
           },
           "auditReportRef": {
             "type": "string",
+            "description": "External Id of a cleaning station",
             "nullable": true
           },
           "certifiedUntilDate": {
             "type": "string",
+            "description": "Datetime where the certificate of the cleaning location expires",
             "format": "date-time"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Not including the following properties:\r\n- Every property from the base class\r\n- SellerOrganisationId - always taking the logged in users' organisation"
       },
       "CertifiedCleaningLocation.CertifiedCleaningLocationVerify": {
         "type": "object",
         "properties": {
           "sellerOrganisationId": {
             "type": "string",
+            "description": "Id of seller organisation",
             "format": "uuid"
           },
           "cleaningLocationId": {
             "type": "string",
+            "description": "Id of cleaning location",
             "format": "uuid"
           },
           "loadingDate": {
             "type": "string",
+            "description": "DateTime of loading date if null will check current date",
             "format": "date-time",
             "nullable": true
           }
@@ -16151,10 +16272,12 @@
         "properties": {
           "name": {
             "type": "string",
+            "description": "The name of the location, e.g. 'Antwerp'.",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "An optional description of the location, where extra information may be placed.",
             "nullable": true
           },
           "addressLines": {
@@ -16163,80 +16286,99 @@
               "type": "string",
               "nullable": true
             },
+            "description": "A dictionary of address lines, where the key is along the lines of 'Street and number'.",
             "nullable": true
           },
           "phone": {
             "type": "string",
+            "description": "The public phone number to contact the location with.",
             "nullable": true
           },
           "fax": {
             "type": "string",
+            "description": "The public fax address to contact the location with.",
             "nullable": true
           },
           "website": {
             "type": "string",
+            "description": "The website of the location, if appliccable.",
             "nullable": true
           },
           "supervisor": {
             "type": "string",
+            "description": "The full name of the representative of the cleaning location. Will be used upon completing cleanings.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Not including the following properties:\r\n- Every property from the base class\r\n- OrganisationId - always taking the logged in users' organisation\r\n- People - first create the location, then add people."
       },
       "CleaningLocation.CleaningLocationResponse": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
+            "description": "Randomly generated Guid.",
             "format": "uuid"
           },
           "createdOn": {
             "type": "string",
+            "description": "Always use UTC for this.",
             "format": "date-time"
           },
           "createdByUser": {
             "type": "string",
+            "description": "Always use SecurityContext.UserId for this.",
             "format": "uuid"
           },
           "lastUpdatedOn": {
             "type": "string",
+            "description": "Always use UTC for this.",
             "format": "date-time"
           },
           "lastUpdatedByUser": {
             "type": "string",
+            "description": "Always use SecurityContext.UserId for this.",
             "format": "uuid"
           },
           "isDeleted": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "If an entity is about to be deleted, one can also choose to 'softdelete' this entity. It still\r\nexists in the database, but should not appear in database queries."
           },
           "version": {
             "type": "string",
+            "description": "A random Guid to prevent concurrency issues.",
             "format": "uuid",
             "nullable": true
           },
           "organisationId": {
             "type": "string",
+            "description": "The organisation to which the location belongs.",
             "format": "uuid"
           },
           "name": {
             "type": "string",
+            "description": "The name of the location, e.g. 'Antwerp'.",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "An optional description of the location, where extra information may be placed.",
             "nullable": true
           },
           "phone": {
             "type": "string",
+            "description": "The public phone number to contact the location with.",
             "nullable": true
           },
           "fax": {
             "type": "string",
+            "description": "The public fax address to contact the location with.",
             "nullable": true
           },
           "website": {
             "type": "string",
+            "description": "The website of the location, if appliccable.",
             "nullable": true
           },
           "addressLines": {
@@ -16247,14 +16389,17 @@
             "items": {
               "$ref": "#/components/schemas/CleaningLocation.CleaningLocationUserResponse"
             },
+            "description": "A list of all people that have access to this location. We keep track of their ID's to\r\nuniquely identify them, as well as their name and username to have meaningful information\r\nto show to the user, without having to query the server too much.",
             "nullable": true
           },
           "supervisor": {
             "type": "string",
+            "description": "Optional field which will be used to automatically fill in the representative of a cleaning location.",
             "nullable": true
           },
           "dunsCode": {
             "type": "string",
+            "description": "A unique code generated by an external party.",
             "nullable": true,
             "deprecated": true
           }
@@ -16266,14 +16411,17 @@
         "properties": {
           "id": {
             "type": "string",
+            "description": "A unique identifier for the location.",
             "format": "uuid"
           },
           "name": {
             "type": "string",
+            "description": "The name of the location, e.g. 'Antwerp'.",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "An optional description of the location, where extra information may be placed.",
             "nullable": true
           },
           "addressLines": {
@@ -16281,18 +16429,22 @@
           },
           "phone": {
             "type": "string",
+            "description": "The public phone number to contact the location with.",
             "nullable": true
           },
           "fax": {
             "type": "string",
+            "description": "The public fax address to contact the location with.",
             "nullable": true
           },
           "website": {
             "type": "string",
+            "description": "The website of the location, if appliccable.",
             "nullable": true
           },
           "supervisor": {
             "type": "string",
+            "description": "The full name of the representative of the cleaning location. Will be used upon completing cleanings.",
             "nullable": true
           }
         },
@@ -16303,10 +16455,12 @@
         "properties": {
           "name": {
             "type": "string",
+            "description": "The name of the location, e.g. 'Antwerp'.",
             "nullable": true
           },
           "description": {
             "type": "string",
+            "description": "An optional description of the location, where extra information may be placed.",
             "nullable": true
           },
           "addressLines": {
@@ -16315,54 +16469,66 @@
               "type": "string",
               "nullable": true
             },
+            "description": "A dictionary of address lines, where the key is along the lines of 'Street and number'.",
             "nullable": true
           },
           "phone": {
             "type": "string",
+            "description": "The public phone number to contact the location with.",
             "nullable": true
           },
           "fax": {
             "type": "string",
+            "description": "The public fax address to contact the location with.",
             "nullable": true
           },
           "website": {
             "type": "string",
+            "description": "The website of the location, if applicable.",
             "nullable": true
           },
           "supervisor": {
             "type": "string",
+            "description": "The full name of the representative of the cleaning location. Will be used upon completing cleanings.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Not including the following properties:\r\n- Every property from the base class\r\n- OrganisationId - always taking the logged in users' organisation\r\n- People - first create the location, then add people."
       },
       "CleaningLocation.CleaningLocationUserResponse": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
+            "description": "The Id of the object.",
             "format": "uuid"
           },
           "fullName": {
             "type": "string",
+            "description": "The full name of the user.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Provides a unique set of identifiers to identify a user for a cleaning location. Only the\r\ndetails that are least likely to change, and can be used in the GUI, are used here."
       },
       "CleaningLocationData.CleaningLocationUser": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
+            "description": "The Id of the object.",
             "format": "uuid"
           },
           "fullName": {
             "type": "string",
+            "description": "The full name of the user.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Provides a unique set of identifiers to identify a user for a cleaning location. Only the\r\ndetails that are least likely to change, and can be used in the GUI, are used here."
       },
       "CleaningTypeEnum": {
         "enum": [
@@ -16375,17 +16541,20 @@
         "type": "object",
         "properties": {
           "success": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Did the validation pass?"
           },
           "validationErrors": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Common.ValidationError"
             },
+            "description": "A list of all errors per property.",
             "nullable": true
           },
           "errorMessage": {
             "type": "string",
+            "description": "A consolidated message containing all validation errors, seperated by newlines.",
             "nullable": true,
             "readOnly": true
           },
@@ -16406,23 +16575,28 @@
         "properties": {
           "message": {
             "type": "string",
+            "description": "The formatted message => all parameters filled into the parameterisedmessage",
             "nullable": true
           },
           "messageCode": {
             "type": "string",
+            "description": "The code of the errorresponse, usable in the front-end to do custom translations",
             "nullable": true
           },
           "parameters": {
             "type": "array",
             "items": { },
+            "description": "The parameters to be filled into the errormessage",
             "nullable": true
           },
           "messageTemplate": {
             "type": "string",
+            "description": "The errormessage, sometimes with variables to be filled with parameters",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "New error response object capable for translations"
       },
       "Common.ValidationError": {
         "type": "object",
@@ -16454,60 +16628,54 @@
         "properties": {
           "fileName": {
             "type": "string",
+            "description": "The suggested name to download the file with.",
             "nullable": true
           },
           "stream": {
             "type": "string",
+            "description": "The payload of the file.",
             "format": "binary",
             "nullable": true
           },
           "contentType": {
             "type": "string",
+            "description": "The MIME-type of the file, such as \"image/png\".",
             "nullable": true
           },
           "downloadToDisk": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Should the file be downloaded to the disk, or may it be opened within the browser?"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Used to offer files as direct downloads."
       },
       "CreditData.CreditPack": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
+            "description": "Uniquely identifies the credit pack.",
             "format": "uuid"
           },
           "createdOn": {
             "type": "string",
+            "description": "Timestamp in UTC when the credit pack was created.",
             "format": "date-time"
-          },
-          "createdByUser": {
-            "type": "string",
-            "format": "uuid"
           },
           "lastUpdatedOn": {
             "type": "string",
+            "description": "Timestamp in UTC when the credit pack was last updated.",
             "format": "date-time"
-          },
-          "lastUpdatedByUser": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "isDeleted": {
-            "type": "boolean"
-          },
-          "version": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
           },
           "initialAmount": {
             "type": "integer",
+            "description": "The amount of credits that the credit pack started with.",
             "format": "int32"
           },
           "currentAmount": {
             "type": "integer",
+            "description": "The current amount of credits that can still be spent.",
             "format": "int32"
           },
           "transactions": {
@@ -16515,32 +16683,39 @@
             "items": {
               "$ref": "#/components/schemas/CreditData.CreditTransaction"
             },
+            "description": "A transaction log, containing all transactions done within a credit pack.",
             "nullable": true
           },
           "organisationId": {
             "type": "string",
+            "description": "The ID of the organisation by which the credit pack was bought.",
             "format": "uuid"
           },
           "walletId": {
             "type": "string",
+            "description": "The ID of the wallet that contains this credit pack.",
             "format": "uuid"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Contains the current amount of credits and transactions for the pack."
       },
       "CreditData.CreditPackOveralSummary": {
         "type": "object",
         "properties": {
           "depleted": {
             "type": "integer",
+            "description": "The amount of credit packs that no longer have any credits availlable.",
             "format": "int32"
           },
           "inUse": {
             "type": "integer",
+            "description": "The amount of credit packs that have seen at least one expenditure, but are not yet depleted.",
             "format": "int32"
           },
           "untouched": {
             "type": "integer",
+            "description": "The amount of credit packs that have yet to be used.",
             "format": "int32"
           },
           "purchased": {
@@ -16553,6 +16728,7 @@
             "items": {
               "$ref": "#/components/schemas/CreditData.CreditPackSummary"
             },
+            "description": "A list of details for each credit pack.",
             "nullable": true
           }
         },
@@ -16563,22 +16739,27 @@
         "properties": {
           "id": {
             "type": "string",
+            "description": "The ID of the credit pack.",
             "format": "uuid"
           },
           "createdOn": {
             "type": "string",
+            "description": "The creation date of the pack.",
             "format": "date-time"
           },
           "lastUpdatedOn": {
             "type": "string",
+            "description": "The last time the pack was updated.",
             "format": "date-time"
           },
           "remainingCredits": {
             "type": "integer",
+            "description": "The amount of remaining credits.",
             "format": "int32"
           },
           "initialCredits": {
             "type": "integer",
+            "description": "The initial amount of credits.",
             "format": "int32"
           }
         },
@@ -16589,23 +16770,28 @@
         "properties": {
           "purchased": {
             "type": "integer",
+            "description": "The total amount of credits that have been bought across all active credit packs\r\nfor this wallet.",
             "format": "int32"
           },
           "remaining": {
             "type": "integer",
+            "description": "The total amount of remaining credits accross all active credit packs in the wallet.",
             "format": "int32"
           },
           "spent": {
             "type": "integer",
+            "description": "The total amount of spent credits accross all active credit packs in the wallet.",
             "format": "int32"
           },
           "spentYearToDate": {
             "type": "integer",
+            "description": "The amount of credits spent this year.",
             "format": "int32",
             "nullable": true
           },
           "spentLastMonth": {
             "type": "integer",
+            "description": "The amount of credits spent last month.",
             "format": "int32",
             "nullable": true
           },
@@ -16616,41 +16802,85 @@
               "format": "int32",
               "nullable": true
             },
+            "description": "The amount of credits spent for each month of the ongoing year.",
             "nullable": true
           }
         },
         "additionalProperties": false
+      },
+      "CreditData.CreditTransaction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Uniquely identifies the transaction.",
+            "format": "uuid"
+          },
+          "performedOn": {
+            "type": "string",
+            "description": "Timestamp in UTC that specifies when the transaction was performed.",
+            "format": "date-time"
+          },
+          "performedBy": {
+            "type": "string",
+            "description": "The ID of the user that initiated the transaction.",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "integer",
+            "description": "The amount of credits that was transferred.",
+            "format": "int32"
+          },
+          "details": {
+            "$ref": "#/components/schemas/CreditData.CreditTransactionContext"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Any alteration the the remaining credits of a credit pack."
+      },
+      "CreditData.CreditTransactionContext": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "$ref": "#/components/schemas/CreditTransactionReasonEnum"
+          },
+          "bookletId": {
+            "type": "string",
+            "description": "An reference to the booklet the transaction is for, if appliccable.",
+            "format": "uuid",
+            "nullable": true
+          },
+          "eEcd": {
+            "type": "string",
+            "description": "An optional reference to the eECD the transaction is for, if appliccable.",
+            "nullable": true
+          },
+          "comment": {
+            "type": "string",
+            "description": "An optional comment.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Contains additional information regarding the transaction."
       },
       "CreditData.CreditWallet": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
+            "description": "Uniquely identifies the credit wallet.",
             "format": "uuid"
           },
           "createdOn": {
             "type": "string",
+            "description": "Timestamp in UTC when the credit wallet was created.",
             "format": "date-time"
-          },
-          "createdByUser": {
-            "type": "string",
-            "format": "uuid"
           },
           "lastUpdatedOn": {
             "type": "string",
+            "description": "Timestamp in UTC when the credit wallet was last updated.",
             "format": "date-time"
-          },
-          "lastUpdatedByUser": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "isDeleted": {
-            "type": "boolean"
-          },
-          "version": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
           },
           "owners": {
             "type": "array",
@@ -16658,33 +16888,40 @@
               "type": "string",
               "format": "uuid"
             },
+            "description": "A list containing the IDs of all organisations that have access to this wallet.",
             "nullable": true
           },
           "warningThreshold": {
             "type": "integer",
+            "description": "A threshold below which we will need to start notifying the organisations about the upcoming\r\ndepletion of the credit packs within the wallet.",
             "format": "int32"
           },
           "spentEPplCredits": {
             "type": "integer",
+            "description": "A counter to keep the amount of partial credits spent to pay for an ePPL.\r\nWhen the SpentEPplCredits modulo 3 is equal to 0, an actual credit wil be paid.",
             "format": "int32"
           },
           "spentEEcoCredits": {
             "type": "integer",
+            "description": "A counter to keep the amount of partial credits spent to pay for an eECO.\r\nWhen the SpentEEcoCredits modulo 2 is equal to 0, an actual credit wil be paid.",
             "format": "int32"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "A wallet that can be shared between companies, that serves as a container for credit packs.\r\nCredits will always be subtracted from the oldest, still active credit pack, regardless of\r\nwhich organisation added the pack or asked for the payment."
       },
       "CreditData.CreditWalletSummary": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
+            "description": "The ID of the wallet.",
             "format": "uuid",
             "nullable": true
           },
           "lastUpdatedOn": {
             "type": "string",
+            "description": "Timestamp in Utc.",
             "format": "date-time",
             "nullable": true
           },
@@ -16694,10 +16931,12 @@
               "type": "string",
               "format": "uuid"
             },
+            "description": "The Ids of the organisations that own this wallet.",
             "nullable": true
           },
           "warningThreshold": {
             "type": "integer",
+            "description": "The threshold below which we need to notify the owners.",
             "format": "int32",
             "nullable": true
           },
@@ -16709,10 +16948,12 @@
           },
           "spentEpplCredits": {
             "type": "integer",
+            "description": "The amount of eppl credits spent in this wallet.\r\nAn eppl credit is 1/3 of a normal credit.",
             "format": "int32"
           },
           "spentEecoCredits": {
             "type": "integer",
+            "description": "The amount of eeco credits spent in this wallet.\r\nAn eeco credit is 1/2 of a normal credit.",
             "format": "int32"
           }
         },
@@ -16723,6 +16964,7 @@
         "properties": {
           "walletId": {
             "type": "string",
+            "description": "The ID of the wallet.",
             "format": "uuid"
           },
           "organisations": {
@@ -16731,26 +16973,32 @@
               "type": "string",
               "format": "uuid"
             },
+            "description": "The ID of the owners of the wallet.",
             "nullable": true
           },
           "warningThreshold": {
             "type": "integer",
+            "description": "The threshold below which the organisations wish to be notified.",
             "format": "int32"
           },
           "creditsPurchased": {
             "type": "integer",
+            "description": "The total amount of credits that have been bought across all active credit packs\r\nfor this wallet.",
             "format": "int32"
           },
           "creditsRemaining": {
             "type": "integer",
+            "description": "The total amount of remaining credits for this organisation.",
             "format": "int32"
           },
           "packsPurchased": {
             "type": "integer",
+            "description": "The total amount of purchased packs, whether they are currently deleted or not.",
             "format": "int32"
           },
           "packsActive": {
             "type": "integer",
+            "description": "The amount of packs that have not been deleted and still have remaining credits in them.",
             "format": "int32"
           },
           "packIds": {
@@ -16759,6 +17007,7 @@
               "type": "string",
               "format": "uuid"
             },
+            "description": "The list of IDs of all packs attached to this wallet.",
             "nullable": true
           }
         },
@@ -16811,7 +17060,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Describes all search parameters for an archived eecd previous load."
       },
       "Document.ArchivedEecdMetadataDetail": {
         "type": "object",
@@ -16823,69 +17073,84 @@
           },
           "equipmentId": {
             "type": "string",
+            "description": "The ID of the equipment for which the eEcd is relevant.",
             "format": "uuid",
             "nullable": true
           },
           "equipmentOperatorName": {
             "type": "string",
+            "description": "The name of the equipment operator organisation.",
             "nullable": true
           },
           "uniqueEquipmentId": {
             "type": "string",
+            "description": "The unique equipment ID for the eEcd.",
             "nullable": true
           },
           "organisationId": {
             "type": "string",
+            "description": "The ID of the organisation that may open this record.",
             "format": "uuid",
             "nullable": true
           },
           "expiresOn": {
             "type": "string",
+            "description": "Timestamp when the pdf and metadata may be removed.",
             "format": "date-time",
             "nullable": true
           },
           "title": {
             "type": "string",
+            "description": "The unique reference number given to the eecd, e.g. 'EECD 0000 0000 0123'.",
             "nullable": true
           },
           "internalReference": {
             "type": "string",
+            "description": "The cleaning reference used internally by the cleaning organisation.",
             "nullable": true
           },
           "customerReference": {
             "type": "string",
+            "description": "The cleaning reference used by the outside world.",
             "nullable": true
           },
           "endedAt": {
             "type": "string",
+            "description": "The timestamp when the container left the cleaning bay.",
             "format": "date-time",
             "nullable": true
           },
           "completedAt": {
             "type": "string",
+            "description": "The timestamp when the cleaner signed the cleaning.",
             "format": "date-time",
             "nullable": true
           },
           "signedOffAt": {
             "type": "string",
+            "description": "The timestamp when the driver signed the cleaning.",
             "format": "date-time",
             "nullable": true
           },
           "cleaningLocationId": {
             "type": "string",
+            "description": "The id of the location where the cleaning was performed.",
             "format": "uuid",
             "nullable": true
           },
           "cleaningLocationName": {
             "type": "string",
+            "description": "The name of the location where the cleaning was performed.",
             "nullable": true
           },
           "cleaningCompanyName": {
             "type": "string",
+            "description": "The name of the cleaning company that performed the cleaning.",
             "nullable": true
           },
           "state": {
             "type": "string",
+            "description": "The state of the cleaning (SIGNOFF/INVALIDATED).",
             "nullable": true
           },
           "loads": {
@@ -16893,27 +17158,33 @@
             "items": {
               "$ref": "#/components/schemas/Document.ArchivedEecdLoadMetadataDetail"
             },
+            "description": "Additional search data for loaders, of which there may be more than one per cleaning.",
             "nullable": true
           },
           "reference": {
             "type": "integer",
+            "description": "Simplified representation of the eECD reference, i.e. just the number.",
             "format": "int64",
             "nullable": true
           },
           "downloadCount": {
             "type": "integer",
+            "description": "The amount of times that the document is downloaded.",
             "format": "int32",
             "nullable": true
           },
           "hash": {
             "type": "string",
+            "description": "A hash calculated over the pdf. If there's ever doubt about the authenticity of a document, we'd be able to\r\nprove whether or not there's been tampered with.",
             "nullable": true
           },
           "hasAttachments": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "A boolean to indicate if there are attachments available for this archived eECD."
           },
           "eecdConsumedAt": {
             "type": "string",
+            "description": "When this eEcd was consumed",
             "format": "date-time",
             "nullable": true
           }
@@ -16949,7 +17220,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Describes all search parameters for an archived ePPL previous load."
       },
       "Document.ArchivedEpplMetadataDetail": {
         "type": "object",
@@ -16961,33 +17233,40 @@
           },
           "equipmentId": {
             "type": "string",
+            "description": "The ID of the equipment for which the ePPL is relevant.",
             "format": "uuid",
             "nullable": true
           },
           "equipmentOperatorName": {
             "type": "string",
+            "description": "The name of the equipment operator organisation.",
             "nullable": true
           },
           "uniqueEquipmentId": {
             "type": "string",
+            "description": "The unique equipment ID for the ePPL.",
             "nullable": true
           },
           "organisationId": {
             "type": "string",
+            "description": "The ID of the organisation that may open this record.",
             "format": "uuid",
             "nullable": true
           },
           "organisationName": {
             "type": "string",
+            "description": "The name of the organisation that may open this record.",
             "nullable": true
           },
           "expiresOn": {
             "type": "string",
+            "description": "Timestamp when the pdf and metadata may be removed.",
             "format": "date-time",
             "nullable": true
           },
           "title": {
             "type": "string",
+            "description": "The unique reference number given to the ePPL, e.g. 'EPPL 0000 0000 0123'.",
             "nullable": true
           },
           "state": {
@@ -16998,20 +17277,24 @@
             "items": {
               "$ref": "#/components/schemas/Document.ArchivedEpplLoadMetadataDetail"
             },
+            "description": "Additional search data for loaders, of which there may be more than one per cleaning.",
             "nullable": true
           },
           "reference": {
             "type": "integer",
+            "description": "Simplified representation of the ePPL reference, i.e. just the number.",
             "format": "int64",
             "nullable": true
           },
           "downloadCount": {
             "type": "integer",
+            "description": "The amount of times that the document is downloaded.",
             "format": "int32",
             "nullable": true
           },
           "hash": {
             "type": "string",
+            "description": "A hash calculated over the pdf. If there's ever doubt about the authenticity of a document, we'd be able to\r\nprove whether or not there's been tampered with.",
             "nullable": true
           }
         },
@@ -17048,18 +17331,22 @@
         "properties": {
           "emailAddress": {
             "type": "string",
+            "description": "Email Address that wants to receive eECD",
             "nullable": true
           },
           "equipmentRef": {
             "type": "string",
+            "description": "Equipment Reference of Equipment (LicensePlate / ContainerId)",
             "nullable": true
           },
           "transportOrderRef": {
             "type": "string",
+            "description": "Reference of Transport Order Reference (TransportReference / DeliveryNotes Identifier / OrderReference)",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Request of Sending eecd through emails with transport order"
       },
       "DocumentTypeEnum": {
         "enum": [
@@ -17088,29 +17375,36 @@
         "properties": {
           "id": {
             "type": "string",
+            "description": "Randomly generated Guid.",
             "format": "uuid"
           },
           "createdOn": {
             "type": "string",
+            "description": "Always use UTC for this.",
             "format": "date-time"
           },
           "createdByUser": {
             "type": "string",
+            "description": "Always use SecurityContext.UserId for this.",
             "format": "uuid"
           },
           "lastUpdatedOn": {
             "type": "string",
+            "description": "Always use UTC for this.",
             "format": "date-time"
           },
           "lastUpdatedByUser": {
             "type": "string",
+            "description": "Always use SecurityContext.UserId for this.",
             "format": "uuid"
           },
           "isDeleted": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "If an entity is about to be deleted, one can also choose to 'softdelete' this entity. It still\r\nexists in the database, but should not appear in database queries."
           },
           "version": {
             "type": "string",
+            "description": "A random Guid to prevent concurrency issues.",
             "format": "uuid",
             "nullable": true
           },
@@ -17226,7 +17520,8 @@
             "$ref": "#/components/schemas/BookletData.PolymerCompletenessStateEnum"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Determines how clean the compartment is.\r\nBusiness determined that a polymer incomplete cleaning can still be considered clean."
       },
       "Equipment.CompartmentCleanlinessStateEnum": {
         "enum": [
@@ -17247,6 +17542,7 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/Equipment.CompartmentCleanliness"
             },
+            "description": "A dictionary containing the compartment key as key, and the cleanliness state as value.",
             "nullable": true
           }
         },
@@ -17526,6 +17822,7 @@
           },
           "sellerId": {
             "type": "string",
+            "description": "The seller that has created this location.",
             "format": "uuid"
           },
           "sellerName": {
@@ -17534,10 +17831,12 @@
           },
           "subgroup": {
             "type": "string",
+            "description": "The subgroup within the seller's organisation.",
             "nullable": true
           },
           "productId": {
             "type": "string",
+            "description": "The ID of the product that may be loaded.",
             "format": "uuid"
           },
           "productName": {
@@ -17572,7 +17871,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Represents a physical location where cleanings can be performed. Employees can be assigned\r\nto a cleaning location, to be able to specify to which locations the user has access."
       },
       "IntegratedLoadingLocation.Output.IntegratedLoadingLocationMinimal": {
         "type": "object",
@@ -17645,6 +17945,7 @@
         "properties": {
           "archivalDurationInDays": {
             "type": "integer",
+            "description": "Defines the number of days for which documents such as eecd's need to be archived.",
             "format": "int32"
           },
           "archivalRecipients": {
@@ -17652,14 +17953,17 @@
             "items": {
               "type": "string"
             },
+            "description": "Defines which email addresses will receive a copy of archived documents.",
             "nullable": true
           },
           "allowCleanerAddNrl": {
             "type": "boolean",
+            "description": "If the current user is Equipment Operator, this flag allows or disallows the Cleaner to add a NonRegistered Load on their behalf",
             "nullable": true
           },
           "monthlyArchive": {
             "type": "boolean",
+            "description": "Set whether monthly archive is run for organisation",
             "nullable": true
           },
           "monthlyArchiveRecipients": {
@@ -17667,6 +17971,7 @@
             "items": {
               "type": "string"
             },
+            "description": "Who receive email notifying monthly archiving",
             "nullable": true
           }
         },
@@ -17695,6 +18000,18 @@
           "articleName": {
             "type": "string",
             "nullable": true
+          },
+          "casNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "ecNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "chemicalNameIupac": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -17718,11 +18035,13 @@
         "properties": {
           "id": {
             "type": "string",
+            "description": "A unique identifier for the location.",
             "format": "uuid",
             "nullable": true
           },
           "sellerId": {
             "type": "string",
+            "description": "The seller of the product.",
             "format": "uuid",
             "nullable": true
           },
@@ -17732,6 +18051,7 @@
           },
           "productId": {
             "type": "string",
+            "description": "The product that may be loaded.",
             "format": "uuid",
             "nullable": true
           },
@@ -17741,6 +18061,7 @@
           },
           "loaderid": {
             "type": "string",
+            "description": "The loader where this product may be loaded.",
             "format": "uuid",
             "nullable": true
           },
@@ -17750,10 +18071,12 @@
           },
           "description": {
             "type": "string",
+            "description": "An optional description of the location.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Output DTO for loading locations."
       },
       "LoadingLocation.LoadingLocationCreate": {
         "required": [
@@ -17764,18 +18087,22 @@
         "properties": {
           "productId": {
             "type": "string",
+            "description": "The ID of the product that will be loaded.",
             "format": "uuid"
           },
           "loaderId": {
             "type": "string",
+            "description": "The ID of the loader to which this location belongs.",
             "format": "uuid"
           },
           "description": {
             "type": "string",
+            "description": "A string value used by the Seller to describe this location on its own communications\r\n(such as transport orders) and internal systems.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Not including the following properties:\r\n- Every property from the base class\r\n- OrganisationId - always taking the logged in users' organisation\r\n- People - first create the location, then add people."
       },
       "LoadingLocation.LoadingLocationImport": {
         "required": [
@@ -17787,21 +18114,25 @@
         "properties": {
           "ref": {
             "type": "integer",
+            "description": "A reference that uniquely defines the import line, used when reporting success or faillure.",
             "format": "int32"
           },
           "uniqueReference": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "A reference field that uniquely defines a product for a specific seller."
           },
           "codeType": {
             "$ref": "#/components/schemas/IdentificationCode.IdentificationCodeTypeEnum"
           },
           "code": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "The actual code used to uniquely identify a loader."
           },
           "description": {
             "type": "string",
+            "description": "An optional description for the location, that has meaning only for the seller.",
             "nullable": true
           }
         },
@@ -17816,60 +18147,74 @@
         "properties": {
           "productId": {
             "type": "string",
+            "description": "The ID of the product that will be loaded.",
             "format": "uuid"
           },
           "loaderId": {
             "type": "string",
+            "description": "The ID of the loader to which this location belongs.",
             "format": "uuid"
           },
           "description": {
             "type": "string",
+            "description": "A string value used by the Seller to describe this location on its own communications\r\n(such as transport orders) and internal systems.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Not including the following properties:\r\n- Every property from the base class\r\n- OrganisationId - always taking the logged in users' organisation\r\n- People - first create the location, then add people."
       },
       "LoadingLocationData.IntegratedLoadingLocation": {
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
+            "description": "Randomly generated Guid.",
             "format": "uuid"
           },
           "createdOn": {
             "type": "string",
+            "description": "Always use UTC for this.",
             "format": "date-time"
           },
           "createdByUser": {
             "type": "string",
+            "description": "Always use SecurityContext.UserId for this.",
             "format": "uuid"
           },
           "lastUpdatedOn": {
             "type": "string",
+            "description": "Always use UTC for this.",
             "format": "date-time"
           },
           "lastUpdatedByUser": {
             "type": "string",
+            "description": "Always use SecurityContext.UserId for this.",
             "format": "uuid"
           },
           "isDeleted": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "If an entity is about to be deleted, one can also choose to 'softdelete' this entity. It still\r\nexists in the database, but should not appear in database queries."
           },
           "version": {
             "type": "string",
+            "description": "A random Guid to prevent concurrency issues.",
             "format": "uuid",
             "nullable": true
           },
           "sellerId": {
             "type": "string",
+            "description": "The seller that has created this location.",
             "format": "uuid"
           },
           "subgroup": {
             "type": "string",
+            "description": "The subgroup within the seller's organisation.",
             "nullable": true
           },
           "productId": {
             "type": "string",
+            "description": "The ID of the product that may be loaded.",
             "format": "uuid"
           },
           "loaderId": {
@@ -17896,7 +18241,8 @@
             "type": "boolean"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Represents a physical location where cleanings can be performed. Employees can be assigned\r\nto a cleaning location, to be able to specify to which locations the user has access."
       },
       "Log.EEcdLog": {
         "type": "object",
@@ -18001,73 +18347,89 @@
           },
           "productType": {
             "type": "string",
+            "description": "The type of product for which the equipment is used",
             "nullable": true
           },
           "licensePlateCountry": {
             "type": "string",
+            "description": "The international licence plate country code of the trailer (only needed when equipmentType=Trailer)",
             "nullable": true
           },
           "tareWeight": {
             "type": "number",
+            "description": "The weight of the equipment when empty",
             "format": "double",
             "nullable": true
           },
           "netWeight": {
             "type": "number",
+            "description": "The maximum payload possible",
             "format": "double",
             "nullable": true
           },
           "maxWeight": {
             "type": "number",
+            "description": "The maximum total weight possible when loaded",
             "format": "double",
             "nullable": true
           },
           "tankTypeAdr": {
             "type": "string",
+            "description": "The tanktype indicator in the ADR tank code",
             "nullable": true
           },
           "minPressureAdr": {
             "type": "string",
+            "description": "The minimum pressure indicator in the ADR tank code",
             "nullable": true
           },
           "openingsAdr": {
             "type": "string",
+            "description": "The openings indicator in the ADR tank code",
             "nullable": true
           },
           "valvesAdr": {
             "type": "string",
+            "description": "The valves indicator in the ADR tank code",
             "nullable": true
           },
           "lastInspectionAdr": {
             "type": "string",
+            "description": "Last ADR inspection date (standard check: every 2.5y for tankcontainer, 3y tanktrailer) or RID inspection date\r\n(standard check: every 4y railcar)",
             "format": "date-time",
             "nullable": true
           },
           "lastPressureTestAdr": {
             "type": "string",
+            "description": "Last ADR pressure test (standard check: every 5y for tankcontainer, 6y tanktrailer, 8y railcar)",
             "format": "date-time",
             "nullable": true
           },
           "te": {
             "type": "string",
+            "description": "ADR special provisions concerning the items of equipment of these tanks",
             "nullable": true
           },
           "tc": {
             "type": "string",
+            "description": "ADR special provisions concerning the construction of equipment of these tanks",
             "nullable": true
           },
           "fl": {
             "type": "string",
+            "description": "Flammable expiry date of the certificate of approval of the vehicle designation according to 9.1.1.2 of ADR",
             "format": "date-time",
             "nullable": true
           },
           "at": {
             "type": "string",
+            "description": "Atmospheric expiry date of the certificate of approval of the vehicle designation according to 9.1.1.2 of ADR",
             "format": "date-time",
             "nullable": true
           },
           "tankInstructionUn": {
             "type": "string",
+            "description": "Instructions expressing the requirements applicable to a portable tank used for the carriage of dangerous goods of\r\nClasses 1 to 9. .",
             "nullable": true
           },
           "lastInspectionUn": {
@@ -18077,21 +18439,25 @@
           },
           "nextExaminationCsc": {
             "type": "string",
+            "description": "The next examination date under the Periodic Examination Scheme (PES)",
             "format": "date-time",
             "nullable": true
           },
           "lastInspectionCsc": {
             "type": "string",
+            "description": "The last inspection data under Approved Continuous Examination Program (ACEP)",
             "format": "date-time",
             "nullable": true
           },
           "mainInspection": {
             "type": "string",
+            "description": "The inspection data of the vehicle (only needed when equipmentType=Trailer)",
             "format": "date-time",
             "nullable": true
           },
           "validitySp": {
             "type": "string",
+            "description": "The expiry data of the special provisions inspection of the vehicle (only needed when equipmentType=Trailer)",
             "format": "date-time",
             "nullable": true
           },
@@ -18264,73 +18630,89 @@
           },
           "productType": {
             "type": "string",
+            "description": "The type of product for which the equipment is used",
             "nullable": true
           },
           "licensePlateCountry": {
             "type": "string",
+            "description": "The international licence plate country code of the trailer (only needed when equipmentType=Trailer)",
             "nullable": true
           },
           "tareWeight": {
             "type": "number",
+            "description": "The weight of the equipment when empty",
             "format": "double",
             "nullable": true
           },
           "netWeight": {
             "type": "number",
+            "description": "The maximum payload possible",
             "format": "double",
             "nullable": true
           },
           "maxWeight": {
             "type": "number",
+            "description": "The maximum total weight possible when loaded",
             "format": "double",
             "nullable": true
           },
           "tankTypeAdr": {
             "type": "string",
+            "description": "The tanktype indicator in the ADR tank code",
             "nullable": true
           },
           "minPressureAdr": {
             "type": "string",
+            "description": "The minimum pressure indicator in the ADR tank code",
             "nullable": true
           },
           "openingsAdr": {
             "type": "string",
+            "description": "The openings indicator in the ADR tank code",
             "nullable": true
           },
           "valvesAdr": {
             "type": "string",
+            "description": "The valves indicator in the ADR tank code",
             "nullable": true
           },
           "lastInspectionAdr": {
             "type": "string",
+            "description": "Last ADR inspection date (standard check: every 2.5y for tankcontainer, 3y tanktrailer) or RID inspection date\r\n(standard check: every 4y railcar)",
             "format": "date-time",
             "nullable": true
           },
           "lastPressureTestAdr": {
             "type": "string",
+            "description": "Last ADR pressure test (standard check: every 5y for tankcontainer, 6y tanktrailer, 8y railcar)",
             "format": "date-time",
             "nullable": true
           },
           "te": {
             "type": "string",
+            "description": "ADR special provisions concerning the items of equipment of these tanks",
             "nullable": true
           },
           "tc": {
             "type": "string",
+            "description": "ADR special provisions concerning the construction of equipment of these tanks",
             "nullable": true
           },
           "fl": {
             "type": "string",
+            "description": "Flammable expiry date of the certificate of approval of the vehicle designation according to 9.1.1.2 of ADR",
             "format": "date-time",
             "nullable": true
           },
           "at": {
             "type": "string",
+            "description": "Atmospheric expiry date of the certificate of approval of the vehicle designation according to 9.1.1.2 of ADR",
             "format": "date-time",
             "nullable": true
           },
           "tankInstructionUn": {
             "type": "string",
+            "description": "Instructions expressing the requirements applicable to a portable tank used for the carriage of dangerous goods of\r\nClasses 1 to 9. .",
             "nullable": true
           },
           "lastInspectionUn": {
@@ -18340,21 +18722,25 @@
           },
           "nextExaminationCsc": {
             "type": "string",
+            "description": "The next examination date under the Periodic Examination Scheme (PES)",
             "format": "date-time",
             "nullable": true
           },
           "lastInspectionCsc": {
             "type": "string",
+            "description": "The last inspection data under Approved Continuous Examination Program (ACEP)",
             "format": "date-time",
             "nullable": true
           },
           "mainInspection": {
             "type": "string",
+            "description": "The inspection data of the vehicle (only needed when equipmentType=Trailer)",
             "format": "date-time",
             "nullable": true
           },
           "validitySp": {
             "type": "string",
+            "description": "The expiry data of the special provisions inspection of the vehicle (only needed when equipmentType=Trailer)",
             "format": "date-time",
             "nullable": true
           },
@@ -18424,73 +18810,89 @@
           },
           "productType": {
             "type": "string",
+            "description": "The type of product for which the equipment is used",
             "nullable": true
           },
           "licensePlateCountry": {
             "type": "string",
+            "description": "The international licence plate country code of the trailer (only needed when equipmentType=Trailer)",
             "nullable": true
           },
           "tareWeight": {
             "type": "number",
+            "description": "The weight of the equipment when empty",
             "format": "double",
             "nullable": true
           },
           "netWeight": {
             "type": "number",
+            "description": "The maximum payload possible",
             "format": "double",
             "nullable": true
           },
           "maxWeight": {
             "type": "number",
+            "description": "The maximum total weight possible when loaded",
             "format": "double",
             "nullable": true
           },
           "tankTypeAdr": {
             "type": "string",
+            "description": "The tanktype indicator in the ADR tank code",
             "nullable": true
           },
           "minPressureAdr": {
             "type": "string",
+            "description": "The minimum pressure indicator in the ADR tank code",
             "nullable": true
           },
           "openingsAdr": {
             "type": "string",
+            "description": "The openings indicator in the ADR tank code",
             "nullable": true
           },
           "valvesAdr": {
             "type": "string",
+            "description": "The valves indicator in the ADR tank code",
             "nullable": true
           },
           "lastInspectionAdr": {
             "type": "string",
+            "description": "Last ADR inspection date (standard check: every 2.5y for tankcontainer, 3y tanktrailer) or RID inspection date\r\n(standard check: every 4y railcar)",
             "format": "date-time",
             "nullable": true
           },
           "lastPressureTestAdr": {
             "type": "string",
+            "description": "Last ADR pressure test (standard check: every 5y for tankcontainer, 6y tanktrailer, 8y railcar)",
             "format": "date-time",
             "nullable": true
           },
           "te": {
             "type": "string",
+            "description": "ADR special provisions concerning the items of equipment of these tanks",
             "nullable": true
           },
           "tc": {
             "type": "string",
+            "description": "ADR special provisions concerning the construction of equipment of these tanks",
             "nullable": true
           },
           "fl": {
             "type": "string",
+            "description": "Flammable expiry date of the certificate of approval of the vehicle designation according to 9.1.1.2 of ADR",
             "format": "date-time",
             "nullable": true
           },
           "at": {
             "type": "string",
+            "description": "Atmospheric expiry date of the certificate of approval of the vehicle designation according to 9.1.1.2 of ADR",
             "format": "date-time",
             "nullable": true
           },
           "tankInstructionUn": {
             "type": "string",
+            "description": "Instructions expressing the requirements applicable to a portable tank used for the carriage of dangerous goods of\r\nClasses 1 to 9. .",
             "nullable": true
           },
           "lastInspectionUn": {
@@ -18500,21 +18902,25 @@
           },
           "nextExaminationCsc": {
             "type": "string",
+            "description": "The next examination date under the Periodic Examination Scheme (PES)",
             "format": "date-time",
             "nullable": true
           },
           "lastInspectionCsc": {
             "type": "string",
+            "description": "The last inspection data under Approved Continuous Examination Program (ACEP)",
             "format": "date-time",
             "nullable": true
           },
           "mainInspection": {
             "type": "string",
+            "description": "The inspection data of the vehicle (only needed when equipmentType=Trailer)",
             "format": "date-time",
             "nullable": true
           },
           "validitySp": {
             "type": "string",
+            "description": "The expiry data of the special provisions inspection of the vehicle (only needed when equipmentType=Trailer)",
             "format": "date-time",
             "nullable": true
           }
@@ -18572,73 +18978,89 @@
           },
           "productType": {
             "type": "string",
+            "description": "The type of product for which the equipment is used",
             "nullable": true
           },
           "licensePlateCountry": {
             "type": "string",
+            "description": "The international licence plate country code of the trailer (only needed when equipmentType=Trailer)",
             "nullable": true
           },
           "tareWeight": {
             "type": "number",
+            "description": "The weight of the equipment when empty",
             "format": "double",
             "nullable": true
           },
           "netWeight": {
             "type": "number",
+            "description": "The maximum payload possible",
             "format": "double",
             "nullable": true
           },
           "maxWeight": {
             "type": "number",
+            "description": "The maximum total weight possible when loaded",
             "format": "double",
             "nullable": true
           },
           "tankTypeAdr": {
             "type": "string",
+            "description": "The tanktype indicator in the ADR tank code",
             "nullable": true
           },
           "minPressureAdr": {
             "type": "string",
+            "description": "The minimum pressure indicator in the ADR tank code",
             "nullable": true
           },
           "openingsAdr": {
             "type": "string",
+            "description": "The openings indicator in the ADR tank code",
             "nullable": true
           },
           "valvesAdr": {
             "type": "string",
+            "description": "The valves indicator in the ADR tank code",
             "nullable": true
           },
           "lastInspectionAdr": {
             "type": "string",
+            "description": "Last ADR inspection date (standard check: every 2.5y for tankcontainer, 3y tanktrailer) or RID inspection date\r\n(standard check: every 4y railcar)",
             "format": "date-time",
             "nullable": true
           },
           "lastPressureTestAdr": {
             "type": "string",
+            "description": "Last ADR pressure test (standard check: every 5y for tankcontainer, 6y tanktrailer, 8y railcar)",
             "format": "date-time",
             "nullable": true
           },
           "te": {
             "type": "string",
+            "description": "ADR special provisions concerning the items of equipment of these tanks",
             "nullable": true
           },
           "tc": {
             "type": "string",
+            "description": "ADR special provisions concerning the construction of equipment of these tanks",
             "nullable": true
           },
           "fl": {
             "type": "string",
+            "description": "Flammable expiry date of the certificate of approval of the vehicle designation according to 9.1.1.2 of ADR",
             "format": "date-time",
             "nullable": true
           },
           "at": {
             "type": "string",
+            "description": "Atmospheric expiry date of the certificate of approval of the vehicle designation according to 9.1.1.2 of ADR",
             "format": "date-time",
             "nullable": true
           },
           "tankInstructionUn": {
             "type": "string",
+            "description": "Instructions expressing the requirements applicable to a portable tank used for the carriage of dangerous goods of\r\nClasses 1 to 9. .",
             "nullable": true
           },
           "lastInspectionUn": {
@@ -18648,21 +19070,25 @@
           },
           "nextExaminationCsc": {
             "type": "string",
+            "description": "The next examination date under the Periodic Examination Scheme (PES)",
             "format": "date-time",
             "nullable": true
           },
           "lastInspectionCsc": {
             "type": "string",
+            "description": "The last inspection data under Approved Continuous Examination Program (ACEP)",
             "format": "date-time",
             "nullable": true
           },
           "mainInspection": {
             "type": "string",
+            "description": "The inspection data of the vehicle (only needed when equipmentType=Trailer)",
             "format": "date-time",
             "nullable": true
           },
           "validitySp": {
             "type": "string",
+            "description": "The expiry data of the special provisions inspection of the vehicle (only needed when equipmentType=Trailer)",
             "format": "date-time",
             "nullable": true
           }
@@ -18717,7 +19143,8 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "DTO for licenses that are about to expire."
       },
       "MasterData.License": {
         "type": "object",
@@ -18889,6 +19316,18 @@
             "type": "string",
             "nullable": true
           },
+          "casNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "ecNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "chemicalNameIupac": {
+            "type": "string",
+            "nullable": true
+          },
           "maximumEcdValidity": {
             "type": "integer",
             "format": "int32"
@@ -18985,6 +19424,18 @@
             "nullable": true
           },
           "unNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "casNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "ecNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "chemicalNameIupac": {
             "type": "string",
             "nullable": true
           },
@@ -19130,14 +19581,17 @@
           },
           "fileLocation": {
             "type": "string",
+            "description": "The location of the file on the blob storage.",
             "nullable": true
           },
           "fileType": {
             "type": "string",
+            "description": "The content type of the file.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "I have strong suspicions that these may be combined into one, but just to be safe, I've created\r\na new class."
       },
       "MasterData.UploadSdsDocumentResult": {
         "type": "object",
@@ -19240,13 +19694,15 @@
           },
           "locationId": {
             "type": "string",
+            "description": "Needs to be a valid cleaning location attached to the organisation.",
             "format": "uuid"
           },
           "type": {
             "$ref": "#/components/schemas/CleaningTypeEnum"
           },
           "isUnaccompanied": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Unaccompanied cleanings do not require a driver signature, and are signed off implicitly\r\nupon completing."
           }
         },
         "additionalProperties": false
@@ -19702,7 +20158,8 @@
             "format": "int32"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "DTO for mapping an eECD log to an object for the created eecds report."
       },
       "Reporting.CreatedEecosReportDetail": {
         "type": "object",
@@ -19764,7 +20221,8 @@
             "format": "int32"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "DTO for mapping an eECO log to an object for the created eecos report."
       },
       "Reporting.CreatedEpplsReportDetail": {
         "type": "object",
@@ -19826,7 +20284,8 @@
             "format": "int32"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "DTO for mapping an ePPL log to an object for the created eppls report."
       },
       "Reporting.LicenseReportDetail": {
         "type": "object",
@@ -20182,42 +20641,50 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "DTO for mapping an eECD log to an object for the royalty report."
       },
       "ResultsPage.BookletData.CleaningSummary": {
         "type": "object",
         "properties": {
           "hitCountTotal": {
             "type": "integer",
+            "description": "The total amount of hits from the query.",
             "format": "int64",
             "nullable": true
           },
           "hitCountPage": {
             "type": "integer",
+            "description": "The amount of hits on this page.",
             "format": "int64",
             "nullable": true
           },
           "pageCurrent": {
             "type": "integer",
+            "description": "The index of the page, counting from 1 upwards.",
             "format": "int32",
             "nullable": true
           },
           "pageSize": {
             "type": "integer",
+            "description": "The maximum size of the page. The amount of found results might be smaller than this number.",
             "format": "int32",
             "nullable": true
           },
           "pageTotal": {
             "type": "integer",
+            "description": "The amount of available pages.",
             "format": "int32",
             "nullable": true
           },
           "hasMorePages": {
             "type": "boolean",
+            "description": "Are there still pages after this one.",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "An optional comment, if anything is off.",
             "nullable": true
           },
           "results": {
@@ -20225,45 +20692,54 @@
             "items": {
               "$ref": "#/components/schemas/BookletData.CleaningSummary"
             },
+            "description": "The actual results of the query.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The result of a query that uses paging."
       },
       "ResultsPage.BookletData.LoadSummary": {
         "type": "object",
         "properties": {
           "hitCountTotal": {
             "type": "integer",
+            "description": "The total amount of hits from the query.",
             "format": "int64",
             "nullable": true
           },
           "hitCountPage": {
             "type": "integer",
+            "description": "The amount of hits on this page.",
             "format": "int64",
             "nullable": true
           },
           "pageCurrent": {
             "type": "integer",
+            "description": "The index of the page, counting from 1 upwards.",
             "format": "int32",
             "nullable": true
           },
           "pageSize": {
             "type": "integer",
+            "description": "The maximum size of the page. The amount of found results might be smaller than this number.",
             "format": "int32",
             "nullable": true
           },
           "pageTotal": {
             "type": "integer",
+            "description": "The amount of available pages.",
             "format": "int32",
             "nullable": true
           },
           "hasMorePages": {
             "type": "boolean",
+            "description": "Are there still pages after this one.",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "An optional comment, if anything is off.",
             "nullable": true
           },
           "results": {
@@ -20271,45 +20747,54 @@
             "items": {
               "$ref": "#/components/schemas/BookletData.LoadSummary"
             },
+            "description": "The actual results of the query.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The result of a query that uses paging."
       },
       "ResultsPage.CreditData.WalletSummary": {
         "type": "object",
         "properties": {
           "hitCountTotal": {
             "type": "integer",
+            "description": "The total amount of hits from the query.",
             "format": "int64",
             "nullable": true
           },
           "hitCountPage": {
             "type": "integer",
+            "description": "The amount of hits on this page.",
             "format": "int64",
             "nullable": true
           },
           "pageCurrent": {
             "type": "integer",
+            "description": "The index of the page, counting from 1 upwards.",
             "format": "int32",
             "nullable": true
           },
           "pageSize": {
             "type": "integer",
+            "description": "The maximum size of the page. The amount of found results might be smaller than this number.",
             "format": "int32",
             "nullable": true
           },
           "pageTotal": {
             "type": "integer",
+            "description": "The amount of available pages.",
             "format": "int32",
             "nullable": true
           },
           "hasMorePages": {
             "type": "boolean",
+            "description": "Are there still pages after this one.",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "An optional comment, if anything is off.",
             "nullable": true
           },
           "results": {
@@ -20317,45 +20802,54 @@
             "items": {
               "$ref": "#/components/schemas/CreditData.WalletSummary"
             },
+            "description": "The actual results of the query.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The result of a query that uses paging."
       },
       "ResultsPage.EEcdLog.EEcdLog": {
         "type": "object",
         "properties": {
           "hitCountTotal": {
             "type": "integer",
+            "description": "The total amount of hits from the query.",
             "format": "int64",
             "nullable": true
           },
           "hitCountPage": {
             "type": "integer",
+            "description": "The amount of hits on this page.",
             "format": "int64",
             "nullable": true
           },
           "pageCurrent": {
             "type": "integer",
+            "description": "The index of the page, counting from 1 upwards.",
             "format": "int32",
             "nullable": true
           },
           "pageSize": {
             "type": "integer",
+            "description": "The maximum size of the page. The amount of found results might be smaller than this number.",
             "format": "int32",
             "nullable": true
           },
           "pageTotal": {
             "type": "integer",
+            "description": "The amount of available pages.",
             "format": "int32",
             "nullable": true
           },
           "hasMorePages": {
             "type": "boolean",
+            "description": "Are there still pages after this one.",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "An optional comment, if anything is off.",
             "nullable": true
           },
           "results": {
@@ -20363,45 +20857,54 @@
             "items": {
               "$ref": "#/components/schemas/Log.EEcdLog"
             },
+            "description": "The actual results of the query.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The result of a query that uses paging."
       },
       "ResultsPage.EecdDocument.ArchivedEecdMetadataDetail": {
         "type": "object",
         "properties": {
           "hitCountTotal": {
             "type": "integer",
+            "description": "The total amount of hits from the query.",
             "format": "int64",
             "nullable": true
           },
           "hitCountPage": {
             "type": "integer",
+            "description": "The amount of hits on this page.",
             "format": "int64",
             "nullable": true
           },
           "pageCurrent": {
             "type": "integer",
+            "description": "The index of the page, counting from 1 upwards.",
             "format": "int32",
             "nullable": true
           },
           "pageSize": {
             "type": "integer",
+            "description": "The maximum size of the page. The amount of found results might be smaller than this number.",
             "format": "int32",
             "nullable": true
           },
           "pageTotal": {
             "type": "integer",
+            "description": "The amount of available pages.",
             "format": "int32",
             "nullable": true
           },
           "hasMorePages": {
             "type": "boolean",
+            "description": "Are there still pages after this one.",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "An optional comment, if anything is off.",
             "nullable": true
           },
           "results": {
@@ -20409,45 +20912,54 @@
             "items": {
               "$ref": "#/components/schemas/Document.ArchivedEecdMetadataDetail"
             },
+            "description": "The actual results of the query.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The result of a query that uses paging."
       },
       "ResultsPage.EecdDocument.ArchivedEpplMetadataDetail": {
         "type": "object",
         "properties": {
           "hitCountTotal": {
             "type": "integer",
+            "description": "The total amount of hits from the query.",
             "format": "int64",
             "nullable": true
           },
           "hitCountPage": {
             "type": "integer",
+            "description": "The amount of hits on this page.",
             "format": "int64",
             "nullable": true
           },
           "pageCurrent": {
             "type": "integer",
+            "description": "The index of the page, counting from 1 upwards.",
             "format": "int32",
             "nullable": true
           },
           "pageSize": {
             "type": "integer",
+            "description": "The maximum size of the page. The amount of found results might be smaller than this number.",
             "format": "int32",
             "nullable": true
           },
           "pageTotal": {
             "type": "integer",
+            "description": "The amount of available pages.",
             "format": "int32",
             "nullable": true
           },
           "hasMorePages": {
             "type": "boolean",
+            "description": "Are there still pages after this one.",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "An optional comment, if anything is off.",
             "nullable": true
           },
           "results": {
@@ -20455,45 +20967,54 @@
             "items": {
               "$ref": "#/components/schemas/Document.ArchivedEpplMetadataDetail"
             },
+            "description": "The actual results of the query.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The result of a query that uses paging."
       },
       "ResultsPage.IdentificationCode.IdentificationCodeDetail": {
         "type": "object",
         "properties": {
           "hitCountTotal": {
             "type": "integer",
+            "description": "The total amount of hits from the query.",
             "format": "int64",
             "nullable": true
           },
           "hitCountPage": {
             "type": "integer",
+            "description": "The amount of hits on this page.",
             "format": "int64",
             "nullable": true
           },
           "pageCurrent": {
             "type": "integer",
+            "description": "The index of the page, counting from 1 upwards.",
             "format": "int32",
             "nullable": true
           },
           "pageSize": {
             "type": "integer",
+            "description": "The maximum size of the page. The amount of found results might be smaller than this number.",
             "format": "int32",
             "nullable": true
           },
           "pageTotal": {
             "type": "integer",
+            "description": "The amount of available pages.",
             "format": "int32",
             "nullable": true
           },
           "hasMorePages": {
             "type": "boolean",
+            "description": "Are there still pages after this one.",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "An optional comment, if anything is off.",
             "nullable": true
           },
           "results": {
@@ -20501,45 +21022,54 @@
             "items": {
               "$ref": "#/components/schemas/IdentificationCode.IdentificationCodeDetail"
             },
+            "description": "The actual results of the query.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The result of a query that uses paging."
       },
       "ResultsPage.IntegratedLoadingLocation.Output.IntegratedLoadingLocation": {
         "type": "object",
         "properties": {
           "hitCountTotal": {
             "type": "integer",
+            "description": "The total amount of hits from the query.",
             "format": "int64",
             "nullable": true
           },
           "hitCountPage": {
             "type": "integer",
+            "description": "The amount of hits on this page.",
             "format": "int64",
             "nullable": true
           },
           "pageCurrent": {
             "type": "integer",
+            "description": "The index of the page, counting from 1 upwards.",
             "format": "int32",
             "nullable": true
           },
           "pageSize": {
             "type": "integer",
+            "description": "The maximum size of the page. The amount of found results might be smaller than this number.",
             "format": "int32",
             "nullable": true
           },
           "pageTotal": {
             "type": "integer",
+            "description": "The amount of available pages.",
             "format": "int32",
             "nullable": true
           },
           "hasMorePages": {
             "type": "boolean",
+            "description": "Are there still pages after this one.",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "An optional comment, if anything is off.",
             "nullable": true
           },
           "results": {
@@ -20547,45 +21077,54 @@
             "items": {
               "$ref": "#/components/schemas/IntegratedLoadingLocation.Output.IntegratedLoadingLocation"
             },
+            "description": "The actual results of the query.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The result of a query that uses paging."
       },
       "ResultsPage.LoadingLocation.LoadingLocation": {
         "type": "object",
         "properties": {
           "hitCountTotal": {
             "type": "integer",
+            "description": "The total amount of hits from the query.",
             "format": "int64",
             "nullable": true
           },
           "hitCountPage": {
             "type": "integer",
+            "description": "The amount of hits on this page.",
             "format": "int64",
             "nullable": true
           },
           "pageCurrent": {
             "type": "integer",
+            "description": "The index of the page, counting from 1 upwards.",
             "format": "int32",
             "nullable": true
           },
           "pageSize": {
             "type": "integer",
+            "description": "The maximum size of the page. The amount of found results might be smaller than this number.",
             "format": "int32",
             "nullable": true
           },
           "pageTotal": {
             "type": "integer",
+            "description": "The amount of available pages.",
             "format": "int32",
             "nullable": true
           },
           "hasMorePages": {
             "type": "boolean",
+            "description": "Are there still pages after this one.",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "An optional comment, if anything is off.",
             "nullable": true
           },
           "results": {
@@ -20593,45 +21132,54 @@
             "items": {
               "$ref": "#/components/schemas/LoadingLocation.LoadingLocation"
             },
+            "description": "The actual results of the query.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The result of a query that uses paging."
       },
       "ResultsPage.MasterData.Equipment": {
         "type": "object",
         "properties": {
           "hitCountTotal": {
             "type": "integer",
+            "description": "The total amount of hits from the query.",
             "format": "int64",
             "nullable": true
           },
           "hitCountPage": {
             "type": "integer",
+            "description": "The amount of hits on this page.",
             "format": "int64",
             "nullable": true
           },
           "pageCurrent": {
             "type": "integer",
+            "description": "The index of the page, counting from 1 upwards.",
             "format": "int32",
             "nullable": true
           },
           "pageSize": {
             "type": "integer",
+            "description": "The maximum size of the page. The amount of found results might be smaller than this number.",
             "format": "int32",
             "nullable": true
           },
           "pageTotal": {
             "type": "integer",
+            "description": "The amount of available pages.",
             "format": "int32",
             "nullable": true
           },
           "hasMorePages": {
             "type": "boolean",
+            "description": "Are there still pages after this one.",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "An optional comment, if anything is off.",
             "nullable": true
           },
           "results": {
@@ -20639,45 +21187,54 @@
             "items": {
               "$ref": "#/components/schemas/MasterData.Equipment"
             },
+            "description": "The actual results of the query.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The result of a query that uses paging."
       },
       "ResultsPage.MasterData.EquipmentField": {
         "type": "object",
         "properties": {
           "hitCountTotal": {
             "type": "integer",
+            "description": "The total amount of hits from the query.",
             "format": "int64",
             "nullable": true
           },
           "hitCountPage": {
             "type": "integer",
+            "description": "The amount of hits on this page.",
             "format": "int64",
             "nullable": true
           },
           "pageCurrent": {
             "type": "integer",
+            "description": "The index of the page, counting from 1 upwards.",
             "format": "int32",
             "nullable": true
           },
           "pageSize": {
             "type": "integer",
+            "description": "The maximum size of the page. The amount of found results might be smaller than this number.",
             "format": "int32",
             "nullable": true
           },
           "pageTotal": {
             "type": "integer",
+            "description": "The amount of available pages.",
             "format": "int32",
             "nullable": true
           },
           "hasMorePages": {
             "type": "boolean",
+            "description": "Are there still pages after this one.",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "An optional comment, if anything is off.",
             "nullable": true
           },
           "results": {
@@ -20685,45 +21242,54 @@
             "items": {
               "$ref": "#/components/schemas/MasterData.EquipmentField"
             },
+            "description": "The actual results of the query.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The result of a query that uses paging."
       },
       "ResultsPage.MasterData.ExigentLicenseSummary": {
         "type": "object",
         "properties": {
           "hitCountTotal": {
             "type": "integer",
+            "description": "The total amount of hits from the query.",
             "format": "int64",
             "nullable": true
           },
           "hitCountPage": {
             "type": "integer",
+            "description": "The amount of hits on this page.",
             "format": "int64",
             "nullable": true
           },
           "pageCurrent": {
             "type": "integer",
+            "description": "The index of the page, counting from 1 upwards.",
             "format": "int32",
             "nullable": true
           },
           "pageSize": {
             "type": "integer",
+            "description": "The maximum size of the page. The amount of found results might be smaller than this number.",
             "format": "int32",
             "nullable": true
           },
           "pageTotal": {
             "type": "integer",
+            "description": "The amount of available pages.",
             "format": "int32",
             "nullable": true
           },
           "hasMorePages": {
             "type": "boolean",
+            "description": "Are there still pages after this one.",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "An optional comment, if anything is off.",
             "nullable": true
           },
           "results": {
@@ -20731,45 +21297,54 @@
             "items": {
               "$ref": "#/components/schemas/MasterData.ExigentLicenseSummary"
             },
+            "description": "The actual results of the query.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The result of a query that uses paging."
       },
       "ResultsPage.Organisations.Output.Organisation": {
         "type": "object",
         "properties": {
           "hitCountTotal": {
             "type": "integer",
+            "description": "The total amount of hits from the query.",
             "format": "int64",
             "nullable": true
           },
           "hitCountPage": {
             "type": "integer",
+            "description": "The amount of hits on this page.",
             "format": "int64",
             "nullable": true
           },
           "pageCurrent": {
             "type": "integer",
+            "description": "The index of the page, counting from 1 upwards.",
             "format": "int32",
             "nullable": true
           },
           "pageSize": {
             "type": "integer",
+            "description": "The maximum size of the page. The amount of found results might be smaller than this number.",
             "format": "int32",
             "nullable": true
           },
           "pageTotal": {
             "type": "integer",
+            "description": "The amount of available pages.",
             "format": "int32",
             "nullable": true
           },
           "hasMorePages": {
             "type": "boolean",
+            "description": "Are there still pages after this one.",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "An optional comment, if anything is off.",
             "nullable": true
           },
           "results": {
@@ -20777,45 +21352,54 @@
             "items": {
               "$ref": "#/components/schemas/Organisations.Output.Organisation"
             },
+            "description": "The actual results of the query.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The result of a query that uses paging."
       },
       "ResultsPage.TransportOrders.Output.TransportOrder": {
         "type": "object",
         "properties": {
           "hitCountTotal": {
             "type": "integer",
+            "description": "The total amount of hits from the query.",
             "format": "int64",
             "nullable": true
           },
           "hitCountPage": {
             "type": "integer",
+            "description": "The amount of hits on this page.",
             "format": "int64",
             "nullable": true
           },
           "pageCurrent": {
             "type": "integer",
+            "description": "The index of the page, counting from 1 upwards.",
             "format": "int32",
             "nullable": true
           },
           "pageSize": {
             "type": "integer",
+            "description": "The maximum size of the page. The amount of found results might be smaller than this number.",
             "format": "int32",
             "nullable": true
           },
           "pageTotal": {
             "type": "integer",
+            "description": "The amount of available pages.",
             "format": "int32",
             "nullable": true
           },
           "hasMorePages": {
             "type": "boolean",
+            "description": "Are there still pages after this one.",
             "nullable": true
           },
           "comment": {
             "type": "string",
+            "description": "An optional comment, if anything is off.",
             "nullable": true
           },
           "results": {
@@ -20823,10 +21407,12 @@
             "items": {
               "$ref": "#/components/schemas/TransportOrders.Output.TransportOrder"
             },
+            "description": "The actual results of the query.",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The result of a query that uses paging."
       },
       "Security.Authorization.Core.Controllers.SecurityContextDto": {
         "type": "object",
@@ -20982,52 +21568,63 @@
         "properties": {
           "confirmationToken": {
             "type": "string",
+            "description": "The token containing non-license user details",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The DTO containing the token used to activate non-license user"
       },
       "Users.Input.NluSignInDto": {
         "type": "object",
         "properties": {
           "email": {
             "type": "string",
+            "description": "The email of the non-license user",
             "nullable": true
           },
           "cleaningId": {
             "type": "string",
+            "description": "The cleaning ID of the non-license user",
             "format": "uuid",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The DTO containing non-license user credentials"
       },
       "Users.Input.NonLicenseUserCreate": {
         "type": "object",
         "properties": {
           "email": {
             "type": "string",
+            "description": "The email of the non-license user",
             "nullable": true
           },
           "firstName": {
             "type": "string",
+            "description": "The first name of the non-license user",
             "nullable": true
           },
           "lastName": {
             "type": "string",
+            "description": "The last name of the non-license user",
             "nullable": true
           },
           "organisationName": {
             "type": "string",
+            "description": "The organisation name of the non-license user",
             "nullable": true
           },
           "cleaningId": {
             "type": "string",
+            "description": "The cleaning ID  of the non-license user",
             "format": "uuid",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The DTO containing non-license user information to be registered"
       },
       "Users.Input.UserCreate": {
         "type": "object",
@@ -21140,36 +21737,44 @@
         "properties": {
           "id": {
             "type": "string",
+            "description": "The user's ID.",
             "format": "uuid"
           },
           "email": {
             "type": "string",
+            "description": "The user login.",
             "nullable": true
           },
           "fullName": {
             "type": "string",
+            "description": "The user's name and last name.",
             "nullable": true
           },
           "userState": {
             "type": "string",
+            "description": "A string representation of the user's state: active, blocked, ...",
             "nullable": true
           },
           "organisationId": {
             "type": "string",
+            "description": "The ID of the user's organisation, if known.",
             "format": "uuid",
             "nullable": true
           },
           "organisationName": {
             "type": "string",
+            "description": "The full name of the organisation to which the user belongs.",
             "nullable": true
           },
           "createdOn": {
             "type": "string",
+            "description": "Timestamp of when the user was created on the platform.",
             "format": "date-time",
             "nullable": true
           },
           "modifiedOn": {
             "type": "string",
+            "description": "Timestamp of when the user was last edited on the platform.",
             "format": "date-time",
             "nullable": true
           },
@@ -21181,10 +21786,12 @@
             "items": {
               "$ref": "#/components/schemas/Users.Output.UserRole"
             },
+            "description": "A list of all user roles to which the user has access.",
             "nullable": true
           },
           "languageCode": {
             "type": "string",
+            "description": "The current user's language",
             "nullable": true
           }
         },
