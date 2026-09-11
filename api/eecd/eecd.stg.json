@@ -4659,7 +4659,7 @@
           "EPpls"
         ],
         "summary": "Search archived ePPL's.",
-        "description": "\n\r\n                    Gives a paged, filterable overview of archived ePPL's for an organisation.\r\n                \r\n\n\r\n  <b>Can be called by</b>\r\n  <ul>\r\n    <li>Community Admin</li>\r\n    <li>Equipment Operator</li>\r\n    <li>Loader</li>\r\n    <li>Seller</li>\r\n  </ul>\r\n\r\n\n\r\n  <b>Required roles</b>\r\n  <ul>\r\n    <li>Admin</li>\r\n  </ul>\r\n",
+        "description": "\n\r\n                    Gives a paged, filterable overview of archived ePPL's for an organisation.\r\n                \r\n\n\r\n  <b>Can be called by</b>\r\n  <ul>\r\n    <li>Community Admin</li>\r\n    <li>Equipment Operator</li>\r\n    <li>Loader</li>\r\n    <li>Seller</li>\r\n  </ul>\r\n\r\n\n\r\n  <b>Required roles</b>\r\n  <ul>\r\n    <li>Admin</li>\r\n    <li>Loading Operator</li>\r\n    <li>Viewer</li>\r\n    <li>Despatcher</li>\r\n  </ul>\r\n",
         "parameters": [
           {
             "name": "organisationId",
